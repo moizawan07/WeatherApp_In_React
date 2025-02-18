@@ -13,28 +13,23 @@ import Foogy from  '../../assets/foogychilly.png'
 import CPresent from  '../../assets/cloudypresent.png'
 import CWarn from'../../assets/cloudywarn.png'
 import Sun from'../../assets/sun.png'
-// import Cloud3 from'../../assets/cloud3.png'
-// import Cloud4 from'../../assets/cloud4.png'
 
 const weatherImg = [Snow, Foogy, CPresent, CWarn, Sun]
-console.log(weatherImg);
+// console.log(weatherImg);
 
 
 
 function WeatherApp (){
   
-  
  let inputRef = useRef(null)
- const [userValue, setUserValue]   = useState("karachi")           // This State User ki value ka liye
+ const [userValue, setUserValue]   = useState(undefined)           // This State User ki value ka liye
  
-const [weatherVal , setWeatherVal] = useState({})     // This State weather Info Display
-
- function userInput () {
-     setUserValue(inputRef.current.value);
- }
+ const [weatherVal , setWeatherVal] = useState('')                // This State weather Info Display
 
 
    useEffect(() => {
+
+    if(userValue){       // VAlue Hona Compulsary ha
 
     let apiKey = "a87fdeb939d54a658a1132056251602"
     fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${userValue}&days=7&aqi=no&alerts=no`)
@@ -66,34 +61,38 @@ const [weatherVal , setWeatherVal] = useState({})     // This State weather Info
  else if(temperature > 35){                              // Sunny Hot Pic
    imgIndex = 5
  }
-console.log(imgIndex);
+console.log(cityName);
 
 //    STATE OBJECT CHANGED 
 
 setWeatherVal(
    {                         /// <-------   STATE KO CHANGE KR RHA AIS OBJECT KI PROPERTY VALUE SAME HA     ------->
-       cityName,
-       temperature,
-       wCondition,
-       imgIndex,
-       wind,
-       humidity,
-       rain
+       cityName    : cityName,
+       temperature : temperature,
+       wCondition  : wCondition,
+       imgIndex    :  imgIndex,
+       wind        : wind,
+       humidity    : humidity,
+       rain        : rain
    })
+  
  
- console.log(data);
- 
+ console.log(weatherVal.cityName);
+  
 
 })
     .catch(error => console.error(`Error ${error}`));
-   },[userValue])
+
+}},[userValue])
 
     return(
      <div className='Weather-main'>
-            <div className='input-div'>
-                <input type="text" id='input' ref={inputRef} />
-                <i className="fas fa-search" onClick={userInput}></i>
-            </div>
+      <div className='input-div'>
+          <input type="text" id='input' ref={inputRef} />
+          <i className="fas fa-search" onClick={() => {setUserValue(inputRef.current.value)}}></i>
+      </div>
+     {weatherVal.cityName && (
+      <>
             <div className="allinfo-about-input-value">
                 <h2>{weatherVal.cityName}</h2>
                 <h1>{weatherVal.temperature}゜</h1>
@@ -118,6 +117,8 @@ setWeatherVal(
                 <p>Rain</p>
                </div>
             </div>
+       </>     
+     )}
 
      </div>
     )

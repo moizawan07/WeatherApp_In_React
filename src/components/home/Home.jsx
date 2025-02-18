@@ -1,11 +1,15 @@
 import {Link} from "react-router-dom"
 import './home.css'
-import Logo from '../../assets/logo.png'
+import Logo1 from '../../assets/logo.png'
+
+
 function Home(){
+
+
     return(
         <div className='homeMain'>
             <h1>Discover The <br />  Weather In Your City</h1>
-            <img src={Logo} alt="LogoImg" />
+            <img src={Logo1} alt="LogoImg" />
             <p>Get to know your weather maps and <br /> rader perciption forecast</p>
           <Link to='weather'><button>Get Started</button> </Link>
         </div>

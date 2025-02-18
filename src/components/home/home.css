@@ -72,3 +72,17 @@ body{
     transform: scale(1.05); /* Button scale on hover */
     background-color: #C67B1F; /* Darken button color on hover */
 }
+
+
+@media(max-width:500px){
+    .homeMain{
+        width: 95%;
+        margin-top: 20px;
+    }
+    .homeMain img{
+        margin-top: 20px;
+    }
+    .homeMain button{
+        width: 90%;
+    }
+}

@@ -1,5 +1,5 @@
-import './weatherapp.css'
 import { useState , useRef, useEffect } from "react"
+import './weatherapp.css'
 
 // import random from '../../Img_icons/w1.png'
 import Windicon from  '../../Img_icons/wind.png'
@@ -15,131 +15,129 @@ import CWarn from'../../assets/cloudywarn.png'
 import Sun from'../../assets/sun.png'
 
 const weatherImg = [Snow, Foogy, CPresent, CWarn, Sun]
-// console.log(weatherImg);
-
+import fetchApi from "../services/fetchUtil"
+import { data } from "react-router-dom"
 
 
 function WeatherApp (){
-  
- let inputRef = useRef(null)
- const [userValue, setUserValue]   = useState()           // This State User ki value ka liye
- 
- const [weatherVal , setWeatherVal] = useState('')         // This State weather Info Display
 
- const [errMsg , setErrMsg] = useState(false)                   // This State ERROR  Handle krne ka liye
+  const [userValue, setUserValue]   = useState(null)                       // This State User ki value ka liye
+  let inputRef = useRef(null)                                              // This Ref is Input se Value lane ka liye
+  const [weatherVal , setWeatherVal] = useState(null)                        // This State weather Info Display
+  const [errMsg , setErrMsg] = useState(false)                             // This State ERROR  Handle krne ka liye
+  console.log(userValue);
+                               
 
+  //  SEARCH WEATHER FUNCTION USERVALUE KI STATE CHANGE KR RHA BUS
 
- function searchWeather(){
-  console.log(inputRef.current.value);
-  
-   setUserValue(inputRef.current.value)
- }
+function searchWeather(){
+     setUserValue(inputRef.current.value)
+}
 
-   useEffect(() => {
+ //  <-------------   CALL FETCH API FUNCTION THAT RETURN A API RESPONCE   OBJECT || ERROR ------------>
 
-    if(userValue){       // VAlue Hona Compulsary ha
+useEffect(() => {
 
-    let apiKey = "a87fdeb939d54a658a1132056251602"
-    fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${userValue}&days=7&aqi=no&alerts=no`)
-    .then(responce => responce.json())
-    .then((data) => {
-
-     let cityName =    data.location.name;
-     let temperature = Math.round(data.current.temp_c);
-     let wCondition =  data.current.condition.text;
-     let imgIndex ;
-     let wind =        Math.round(data.current.wind_kph)
-     let humidity =    Math.round(data.current.humidity)
-     let rain =        Math.round(data.forecast.forecastday[0].day.daily_chance_of_rain)
-    
+  if(userValue){          // AGR USER NE VALUE DII TO HE FETCH API CALL HO 
+    let apiUrl = `https://api.weatherapi.com/v1/forecast.json?key=a87fdeb939d54a658a1132056251602&q=${userValue}&days=7&aqi=no&alerts=no`;
+    let funcReturn = fetchApi(apiUrl)     // Call the Api Function
+      .then(data => {  
+     //   ye data ka andr buht sari chezze ha ais ma se kuch chheze nikl kr setWeather ki state ko changed kr rha
+   
+    let nWeatherInfo = {                        
+      cN    : data.location.name,
+      t : Math.round(data.current.temp_c),
+      wC  : data.current.condition.text,
+      imgIndex: undefined,
+      wd        : Math.round(data.current.wind_kph),
+      hdty    : Math.round(data.current.humidity),
+      r        : Math.round(data.forecast.forecastday[0].day.daily_chance_of_rain)
+  }
+   
 //  temperatue ko dekh ka  img index ka imgArray ka koi aik number store kr rha
 
- if(temperature > -20 && temperature <= 10){            // Cold Pic
-   imgIndex = 1
- }
- else if(temperature > 10 && temperature <= 15){      // Foggiy Chillly Pic
-   imgIndex = 2 
- }
- else if(temperature > 15 && temperature <= 25){        // Cloudy Pleasent Pic
-   imgIndex = 3
- }
- else if(temperature > 25 && temperature <= 35){         // Party cloudy Warm Pic
-   imgIndex = 4
- }
- else if(temperature > 35){                              // Sunny Hot Pic
-   imgIndex = 5
- }
-// console.log(cityName);
+if(nWeatherInfo.t > -20 && nWeatherInfo.t <= 10){            // Cold Pic
+  nWeatherInfo.imgIndex = 1
+}
+else if(nWeatherInfo.t > 10 && nWeatherInfo.t <= 15){      // Foggiy Chillly Pic
+  nWeatherInfo.imgIndex = 2
+}
+else if(nWeatherInfo.t > 15 && nWeatherInfo.t <= 25){        // Cloudy Pleasent Pic
+  nWeatherInfo.imgIndex = 3
+}
+else if(nWeatherInfo.t > 25 && nWeatherInfo.t <= 35){         // Party cloudy Warm Pic
+  nWeatherInfo.imgIndex = 4
+}
+else if(nWeatherInfo.t > 35){                              // Sunny Hot Pic
+  nWeatherInfo.imgIndex = 5
+}
 
-//    WEATHER STATE CHANGED
+setWeatherVal(nWeatherInfo)       //    WEATHER STATE CHANGED 
+setErrMsg(false)                  //    ERROR STATE CHANGED 
 
-setWeatherVal(
-   {                         /// <-------  WEATHER STATE KO CHANGE KR KA OBJECT EMBEDED KR RHA     ------->
-       cityName    : cityName,
-       temperature : temperature,
-       wCondition  : wCondition,
-       imgIndex    :  imgIndex,
-       wind        : wind,
-       humidity    : humidity,
-       rain        : rain
-   })
-  
-   setErrMsg(false)      // ERROR STATE UPDATE
- 
-  
+})   
+.catch((error) => {
+  // console.error(error);
+    setErrMsg(true)              // ERROR STATE CHANGED     ====> TRUE MSG SHOW HOJAI 
+    setWeatherVal(undefined)     // WEATHER STATE CHANGED   ====>  UNDEFINED TAKA KUCH NA DEKHE WEATHER KI INFO KA REALTED
 
 })
-    .catch(error => {
-      console.error(`BAD REQUEST ${error}`)
+}
 
-      setErrMsg(true)              // ERROR STATE UPDATE
-
-      setWeatherVal('')        // WEATHER STATE UPDATE 
-
-    });
-
-}},[userValue])
+}, [userValue])       // DEPENDENCY ARRAY MA JO USERVALUE STATE MA INPUT KI VALUE STORED HA
 
 
     return(
      <div className='Weather-main'>
+
+       {/* <--------------- INPUT DIV HERE -----------> */}
+
       <div className='input-div'>
-          <input type="text" id='input' ref={inputRef} onKeyUp={(event) => event.key === 'Enter' ? searchWeather() : ''}/>
+          <input
+           type="text"
+           id='input'
+           ref={inputRef}
+           onKeyUp={(event) => event.key === 'Enter' ? searchWeather() : ''}
+          />
           <i className="fas fa-search" onClick={searchWeather}></i>
       </div>
 
-     {errMsg ? <p className='ErrMSG'>Invalid Name Not Found Try Again...</p>  : ''}  {/* ERROR MSG AGR TRUE HA TO SHOW HOGA OTHER WISE NOO */}
+      {/* <------ ERROR MSG SHOW HERE AGR TRUE HOA TO SHOW HOGA OTHERWISE NO --------> */}                          
 
+      {errMsg ? <p className='ErrMSG'>Invalid Name Not Found Try Again...</p>  : ''} 
 
-     {weatherVal.cityName &&(          // WEATHER.NAME CITY MILNA PA MIL JYEE GA
+      { /* <------ WEATHER INFO SHOW HERE AGR WEATHER HA TO SHOW HOGA OTHERWISE NO --------> */}                          
+
+      {weatherVal &&(         
       <>
             <div className="allinfo-about-input-value">
-                <h2>{weatherVal.cityName}</h2>
-                <h1>{weatherVal.temperature}゜</h1>
-                <p>{weatherVal.wCondition}</p>
+                <h2>{weatherVal.cN}</h2>
+                <h1>{weatherVal.t}゜</h1>
+                <p>{weatherVal.wC}</p>
                 <img src={weatherImg[weatherVal.imgIndex - 1]} alt="weathericon" />
             </div>
             <div className="weatherinfo-allofthes">
 
                <div className="spped-box" id='wind-box'>
                 <img src={Windicon} alt="windspeedIcon" />
-                <h2>{weatherVal.wind}M/s</h2>
+                <h2>{weatherVal.wd}M/s</h2>
                 <p>Wind</p>
                </div>
                <div className="spped-box" id='Humidity-box'>
                 <img src={Humiicon} alt="windspeedIcon" />
-                <h2>{weatherVal.humidity}%</h2>
+                <h2>{weatherVal.hdty}%</h2>
                 <p>Humidity</p>
                </div>
                <div className="spped-box" id='Rain-box'>
                 <img src={Rainicon} alt="windspeedIcon" />
-                <h2>{weatherVal.rain}%</h2>
+                <h2>{weatherVal.r}%</h2>
                 <p>Rain</p>
                </div>
             </div>
        </>     
-     )}
+      )}
 
+     {/* <------------- END HERE   -----------> */}
      </div>
     )
 

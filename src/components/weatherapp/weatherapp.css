@@ -120,7 +120,7 @@ body{
 }
 
 .ErrMSG{
-  color: white;
+  color: rgb(255, 191, 0);
    text-align: center;
    margin-top: 15%;
    font-size: 18px;
@@ -131,8 +131,18 @@ body{
         width: 100%;
         margin-top: 0px;
         min-height: 100vh;
+        padding-top: 12px;
     }
-    allinfo-about-input-value img {
-        width: 85%;
+
+     .allinfo-about-input-value{
+        margin-top: 40px;
+     }
+
+    .allinfo-about-input-value img {
+        width: 80%;
+        height: 280px;
+    }
+    .weatherinfo-allofthes{
+        margin-top: 0;
     }
 }

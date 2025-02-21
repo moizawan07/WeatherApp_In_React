@@ -22,10 +22,18 @@ const weatherImg = [Snow, Foogy, CPresent, CWarn, Sun]
 function WeatherApp (){
   
  let inputRef = useRef(null)
- const [userValue, setUserValue]   = useState(undefined)           // This State User ki value ka liye
+ const [userValue, setUserValue]   = useState()           // This State User ki value ka liye
  
- const [weatherVal , setWeatherVal] = useState('')                // This State weather Info Display
+ const [weatherVal , setWeatherVal] = useState('')         // This State weather Info Display
 
+ const [errMsg , setErrMsg] = useState(false)                   // This State ERROR  Handle krne ka liye
+
+
+ function searchWeather(){
+  console.log(inputRef.current.value);
+  
+   setUserValue(inputRef.current.value)
+ }
 
    useEffect(() => {
 
@@ -61,12 +69,12 @@ function WeatherApp (){
  else if(temperature > 35){                              // Sunny Hot Pic
    imgIndex = 5
  }
-console.log(cityName);
+// console.log(cityName);
 
-//    STATE OBJECT CHANGED 
+//    WEATHER STATE CHANGED
 
 setWeatherVal(
-   {                         /// <-------   STATE KO CHANGE KR RHA AIS OBJECT KI PROPERTY VALUE SAME HA     ------->
+   {                         /// <-------  WEATHER STATE KO CHANGE KR KA OBJECT EMBEDED KR RHA     ------->
        cityName    : cityName,
        temperature : temperature,
        wCondition  : wCondition,
@@ -76,22 +84,34 @@ setWeatherVal(
        rain        : rain
    })
   
+   setErrMsg(false)      // ERROR STATE UPDATE
  
- console.log(weatherVal.cityName);
   
 
 })
-    .catch(error => console.error(`Error ${error}`));
+    .catch(error => {
+      console.error(`BAD REQUEST ${error}`)
+
+      setErrMsg(true)              // ERROR STATE UPDATE
+
+      setWeatherVal('')        // WEATHER STATE UPDATE 
+
+    });
 
 }},[userValue])
+
 
     return(
      <div className='Weather-main'>
       <div className='input-div'>
-          <input type="text" id='input' ref={inputRef} />
-          <i className="fas fa-search" onClick={() => {setUserValue(inputRef.current.value)}}></i>
+          <input type="text" id='input' ref={inputRef} onKeyUp={(event) => event.key === 'Enter' ? searchWeather() : ''}/>
+          <i className="fas fa-search" onClick={searchWeather}></i>
       </div>
-     {weatherVal.cityName && (
+
+     {errMsg ? <p className='ErrMSG'>Invalid Name Not Found Try Again...</p>  : ''}  {/* ERROR MSG AGR TRUE HA TO SHOW HOGA OTHER WISE NOO */}
+
+
+     {weatherVal.cityName &&(          // WEATHER.NAME CITY MILNA PA MIL JYEE GA
       <>
             <div className="allinfo-about-input-value">
                 <h2>{weatherVal.cityName}</h2>

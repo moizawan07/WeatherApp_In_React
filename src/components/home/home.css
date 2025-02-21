@@ -1,5 +1,6 @@
 body{
     background-color: #181916;
+    /* background-color: #151613 !important; */
 }
 
 .homeMain{
@@ -38,6 +39,7 @@ body{
 }
 
 .homeMain img{
+    margin-top: 10px;
     width: 70%;
     animation: imageChange 2s infinite; /* Image change animation */
 }
@@ -57,7 +59,7 @@ body{
 
 .homeMain button{
     margin-top: 30px;
-    width: 290px;
+    width: 340px;
     height: 60px;
     border-radius: 15px;
     background-color: #DD9522;
@@ -76,11 +78,15 @@ body{
 
 @media(max-width:500px){
     .homeMain{
-        width: 95%;
-        margin-top: 20px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .homeMain h1{
+        font-size: 38px;
     }
     .homeMain img{
-        margin-top: 20px;
+        width: 85%;
+        margin-top: 40px;
     }
     .homeMain button{
         width: 90%;

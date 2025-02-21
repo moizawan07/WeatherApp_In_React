@@ -2,19 +2,20 @@ import { useState , useRef, useEffect } from "react"
 import './weatherapp.css'
 
 // import random from '../../Img_icons/w1.png'
-import Windicon from  '../../Img_icons/wind.png'
-import Humiicon from  '../../Img_icons/w3.png'
-import Rainicon from  '../../Img_icons/w5.png'
+import Windicon from  '../../assets/Img_icons/wind.png'
+import Humiicon from  '../../assets/Img_icons/w3.png'
+import Rainicon from  '../../assets/Img_icons/w5.png'
 
 // Weather Temperture Vise Images
 
-import Snow from  '../../assets/extremlysnow.png'
-import Foogy from  '../../assets/foogychilly.png'
+import Snow from    '../../assets/extremlysnow.png'
+import Foogy from   '../../assets/foogychilly.png'
 import CPresent from  '../../assets/cloudypresent.png'
-import CWarn from'../../assets/cloudywarn.png'
-import Sun from'../../assets/sun.png'
+import CWarn from   '../../assets/cloudywarn.png'
+import Sun from    '../../assets/sun.png'
 
 const weatherImg = [Snow, Foogy, CPresent, CWarn, Sun]
+
 import fetchApi from "../services/fetchUtil"
 import { data } from "react-router-dom"
 

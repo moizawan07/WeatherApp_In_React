@@ -1,4 +1,4 @@
-import { useState , useRef, useEffect } from "react"
+  import { useState , useRef, useEffect } from "react"
 import './weatherapp.css'
 
 // import random from '../../Img_icons/w1.png'
@@ -16,7 +16,7 @@ import Sun from    '../../assets/sun.png'
 
 const weatherImg = [Snow, Foogy, CPresent, CWarn, Sun]
 
-import fetchApi from "../services/fetchUtil"
+import fetchApi from "../../services/fetchUtil"
 import { data } from "react-router-dom"
 
 
